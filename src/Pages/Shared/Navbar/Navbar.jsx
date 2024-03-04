@@ -1,13 +1,33 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Link, NavLink } from 'react-router-dom';
-import user from '../../../assets/user.png'
+import userLogo from '../../../assets/user.png'
+import { authContext } from '../../../Provider/AuthProvider/AuthProvider';
+import { FaTasks } from 'react-icons/fa';
+import { toast } from 'react-hot-toast';
 
 const Navbar = () => {
+    const authInfo = useContext(authContext)
+    const { user, logOutUser } = authInfo
     const navLinks = <>
         <li><NavLink to="/">Home</NavLink></li>
         <li><NavLink to='/about'>About</NavLink></li>
         <li><NavLink to='/career'>Career</NavLink></li>
+        {
+            user && <li><NavLink to="/dashboard">Dashboard</NavLink></li>
+        }
+        {/* <li><NavLink to='/login'>Login</NavLink></li>
+        <li><NavLink to='/register'>Register</NavLink></li> */}
     </>
+
+    const handleLogOut = () => {
+        logOutUser()
+            .then(res => {
+                console.log('log out successfully')
+                toast('Please LogIn')
+
+            })
+            .catch(err => console.error(err))
+    }
     return (
         <div className="navbar bg-base-100">
             <div className="navbar-start">
@@ -26,12 +46,19 @@ const Navbar = () => {
                 </ul>
             </div>
             <div className="navbar-end">
-                <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar">
-                    <div className="w-10 rounded-full">
-                        <img alt="Tailwind CSS Navbar component" src={user} />
-                    </div>
-                </div>
-                <Link className="btn" to="/">Login</Link>
+                {
+                    user ? <>
+                        <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar">
+                            <div className="w-10 rounded-full">
+                                <img alt="userLogo" src={
+
+                                    user.photoURL ? user.photoURL : userLogo
+
+                                } />
+                            </div>
+                        </div><Link className="btn" to="/login" onClick={handleLogOut}>LogOut</Link></> : <Link className="btn" to="/login">Login</Link>
+                }
+
             </div>
         </div>
     );

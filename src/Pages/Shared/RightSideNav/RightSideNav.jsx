@@ -1,26 +1,39 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { FaFacebook, FaGithub, FaGoogle, FaInstagram, FaTwitter } from "react-icons/fa";
 import qZone1 from '../../../assets/qZone1.png'
 import qZone2 from '../../../assets/qZone2.png'
 import qZone3 from '../../../assets/qZone3.png'
+import { authContext } from '../../../Provider/AuthProvider/AuthProvider';
 
 
 const RightSideNav = () => {
+    const authInfo = useContext(authContext)
+    const { user, logInUserWithGoogle } = authInfo
+    const handleGoogleLogIn = () => {
+        logInUserWithGoogle()
+        .then(result => {
+            console.log('logIn Google successfully', result.user)
+        })
+        .catch(err => console.error(err))
+        
+    }
     return (
         <div>
-            <div className='mx-auto space-y-2 mb-6'>
-                <h2 className='p-6 text-2xl font-semibold'>Login With</h2>
-                <div className='text-center'>
-                    <button className="btn btn-outline btn-wide mb-2">
-                        <FaGoogle />
-                        Google
-                    </button>
-                    <button className="btn btn-outline btn-wide">
-                        <FaGithub />
-                        Github
-                    </button>
+            {
+                user ? '' : <div className='mx-auto space-y-2 mb-6'>
+                    <h2 className='p-6 text-2xl font-semibold'>Login With</h2>
+                    <div className='text-center'>
+                        <button onClick={handleGoogleLogIn} className="btn btn-outline btn-wide mb-2">
+                            <FaGoogle />
+                            Google
+                        </button>
+                        <button className="btn btn-outline btn-wide">
+                            <FaGithub />
+                            Github
+                        </button>
+                    </div>
                 </div>
-            </div>
+            }
 
             <div className='mx-auto space-y-2 mb-6 p-6'>
                 <h2 className='text-2xl font-semibold'>Find Us On</h2>
